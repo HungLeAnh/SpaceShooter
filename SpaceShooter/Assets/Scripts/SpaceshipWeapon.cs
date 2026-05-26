@@ -1,0 +1,28 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SpaceshipWeapon : MonoBehaviour
+{
+    [SerializeField] private List<Transform> muzzlePoint;
+    [SerializeField] private BulletType currentActiveAmmo = BulletType.Standard;
+    [SerializeField] private float fireRate = 0.2f;
+
+    private float _nextFireTime;
+
+    public void FireActiveWeapon()
+    {
+        if (Time.time < _nextFireTime) return;
+        _nextFireTime = Time.time + fireRate;
+
+        foreach (var point in muzzlePoint)
+        {
+            GameObject projectile = MultiBulletPoolManager.Instance.GetBullet(currentActiveAmmo);
+
+            if (projectile != null)
+            {
+                projectile.transform.position = point.position;
+                projectile.transform.rotation = point.rotation;
+            }
+        }
+    }
+}

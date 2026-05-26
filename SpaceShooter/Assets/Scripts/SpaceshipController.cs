@@ -1,34 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-public class  SpaceShip
-{
-    private int health;
-    private float speed;
-    public int Health { get => health; set => health = value; }
-    public float Speed { get => speed; set => speed = value; }
-    public SpaceShip(int health, float speed)
-    {
-        this.Health = health;
-        this.Speed = speed;
-    }
-
-
-}
-
 public class SpaceshipController : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private int health = 3;
-
     [SerializeField] private Camera mainCamera;
     [SerializeField] private SpriteRenderer spaceshipRenderer;
     [SerializeField] private SpriteRenderer engineRenderer;
     [SerializeField] private SpriteRenderer engineEffect;
+    [SerializeField] private Transform spaceshipWeaponParent;
+    [SerializeField] private List<GameObject> weaponList;
+    
 
     private PlayerInputAction actions;
     private InputAction moveAction;
@@ -37,13 +22,12 @@ public class SpaceshipController : MonoBehaviour
     private float objectWidth;
     private float objectHeight;
     private bool isMoving = false;
+    private SpaceshipWeapon currentWeapon;
 
-    private SpaceShip spaceShip;
     private void Awake()
     {
         actions = new PlayerInputAction();
         actions.Player.Enable();
-        spaceShip = new SpaceShip(health, speed);
     }
     private void Start()
     {
@@ -68,16 +52,20 @@ public class SpaceshipController : MonoBehaviour
 
     private void Update()
     {
-        if (isMoving) 
+        if (GameManager.Instance.CurrentStateType == GameStateType.Playing)
         {
-            Vector2 input = GetInputVectorNormalized();
-            transform.position += new Vector3(input.x, input.y, 0) * Time.deltaTime * spaceShip.Speed;
+            if (isMoving)
+            {
+                Vector2 input = GetInputVectorNormalized();
+                transform.position += new Vector3(input.x, input.y, 0) * Time.deltaTime * GameManager.Instance.SpaceShip.Speed;
 
-            float clampedX = Mathf.Clamp(transform.position.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
-            float clampedY = Mathf.Clamp(transform.position.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
-            transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+                float clampedX = Mathf.Clamp(transform.position.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
+                float clampedY = Mathf.Clamp(transform.position.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
+                transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+
+            }
+            currentWeapon.FireActiveWeapon();
         }
-
     }
     private void LateUpdate()
     {
@@ -92,5 +80,5 @@ public class SpaceshipController : MonoBehaviour
         }
         return Vector2.zero;
     }
-    
+
 }
