@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3984170715653556232}
   - component: {fileID: 2764194510827645667}
   m_Layer: 0
-  m_Name: Cannon
+  m_Name: CannonWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674cc2b2917ed244da4ce0d0daa0c63a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolManager: {fileID: 0}
   muzzlePoint:
   - {fileID: 4218726966328003138}
   - {fileID: 9168591969490824094}
   currentActiveAmmo: 0
   fireRate: 0.7
+  weaponAnimator: {fileID: 8322404292527470893}
 --- !u!1 &2635271525258936534
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +127,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Ship - Weapons - Auto Cannon
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: fd3663513959f5745b4ac83ea657048a, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: fd3663513959f5745b4ac83ea657048a, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1012091633
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: fd3663513959f5745b4ac83ea657048a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -175,5 +183,10 @@ PrefabInstance:
 --- !u!4 &1022583871119297512 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7878350319992209165, guid: fd3663513959f5745b4ac83ea657048a, type: 3}
+  m_PrefabInstance: {fileID: 7162261912185763045}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8322404292527470893 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1160356261127867848, guid: fd3663513959f5745b4ac83ea657048a, type: 3}
   m_PrefabInstance: {fileID: 7162261912185763045}
   m_PrefabAsset: {fileID: 0}

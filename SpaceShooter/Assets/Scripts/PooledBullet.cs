@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PooledBullet : MonoBehaviour
@@ -5,6 +7,7 @@ public class PooledBullet : MonoBehaviour
     [SerializeField] private BulletType bulletType;
     [SerializeField] private float speed = 12f;
     [SerializeField] private float maxLifetime = 3f;
+    [SerializeField] private GameObject explosionEffect;
 
     private MultiBulletPoolManager _poolManager;
     private float _lifetimeTimer;
@@ -40,6 +43,17 @@ public class PooledBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if(other.gameObject.TryGetComponent<IDamageable>(out var damageable))
+        {
+            StartCoroutine(PlayExplosionAnimation());
+        }
+
+    }
+
+    IEnumerator PlayExplosionAnimation()
+    {
+        explosionEffect.SetActive(true);
+        yield return new WaitForSeconds(0.4f);
         ReturnToPool();
     }
 

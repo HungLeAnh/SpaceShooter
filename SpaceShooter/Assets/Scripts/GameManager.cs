@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public enum GameStateType
 {
@@ -41,6 +42,10 @@ public class GameManager : MonoBehaviour
         gameStateManager = new GameStateManager();
         ChangeState(GameStateType.MainMenu);
     }
+    private void Update()
+    {
+        gameStateManager.Update();
+    }
     public void ChangeState(GameStateType stateType)
     {
         switch(stateType)
@@ -71,7 +76,7 @@ public class GameStateManager
     public GameState CurrentState { get => currentState; set => currentState = value; }
     public GameStateManager()
     {
-        currentState = new GameState();
+        currentState = null;
     }
     public void ChangeState(GameState newState)
     {
@@ -81,31 +86,31 @@ public class GameStateManager
         currentState = newState;
         currentState.Enter();
     }
+    public void Update()
+    {
+        currentState.Update();
+    }
 }
-public class GameState
+public abstract class GameState
 {
-    public virtual void Enter()
-    {
-        // Code to execute when entering the state
-    }
-    public virtual void Exit()
-    {
-        // Code to execute when exiting the state
-    }
-
+    public abstract void Enter();
+    public abstract void Exit();
+    public abstract void Update();
 }
 public class MainMenuState : GameState
 {
     public override void Enter()
     {
-        base.Enter();
         HUDController.Instance.ShowElement(HUDStateType.Menu);
     }
 
     public override void Exit()
     {
-        base.Exit();
         HUDController.Instance.HideElement(HUDStateType.Menu);
+    }
+    public override void Update()
+    {
+
     }
 }
 
@@ -113,26 +118,29 @@ public class PlayingState : GameState
 {
     public override void Enter()
     {
-        base.Enter();
         HUDController.Instance.ShowElement(HUDStateType.Stats);
     }
     public override void Exit()
     {
-        base.Exit();
         HUDController.Instance.HideElement(HUDStateType.Stats);
+    }
+    public override void Update()
+    {
+        
     }
 }
 public class GameOverState : GameState
 {
     public override void Enter()
     {
-        base.Enter();
         HUDController.Instance.ShowElement(HUDStateType.GameOver);
     }
     public override void Exit()
     {
-        base.Exit();
         HUDController.Instance.HideElement(HUDStateType.GameOver);
     }
-
+    public override void Update()
+    {
+        
+    }
 }

@@ -5,15 +5,39 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SpaceshipController : MonoBehaviour
+public enum WeaponType
+{
+    StandardWeapon,
+    LaserWeapon,
+    PlasmaWeapon,
+    MissileWeapon,
+}
+
+[Serializable]
+public struct WeaponConfig
+{
+    public WeaponType WeaponType;
+    public GameObject WeaponPrefab;
+}
+public interface IDamageable
+{
+
+}
+public interface IPowerUpable
+{
+    void PowerUp(PowerUpType powerUpType,float powerUpTime);
+}
+public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private SpriteRenderer spaceshipRenderer;
     [SerializeField] private SpriteRenderer engineRenderer;
     [SerializeField] private SpriteRenderer engineEffect;
     [SerializeField] private Transform spaceshipWeaponParent;
-    [SerializeField] private List<GameObject> weaponList;
-    
+    [SerializeField] private List<WeaponConfig> weaponList;
+    [SerializeField] private SpaceshipWeapon defaultWeapon;
+
+    private Dictionary<WeaponType, WeaponConfig> weaponsDictionary;
 
     private PlayerInputAction actions;
     private InputAction moveAction;
@@ -22,6 +46,11 @@ public class SpaceshipController : MonoBehaviour
     private float objectWidth;
     private float objectHeight;
     private bool isMoving = false;
+
+    private float shieldTime;
+    private float weaponTime;
+
+    private SpaceshipWeapon currentShield;
     private SpaceshipWeapon currentWeapon;
 
     private void Awake()
@@ -31,6 +60,12 @@ public class SpaceshipController : MonoBehaviour
     }
     private void Start()
     {
+        weaponsDictionary = new Dictionary<WeaponType, WeaponConfig>();
+        foreach (var weapon in weaponList)
+        {
+            weaponsDictionary[weapon.WeaponType] = weapon;
+        }
+
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
         objectWidth = spaceshipRenderer.bounds.size.x / 2;
         objectHeight = spaceshipRenderer.bounds.size.y / 2;
@@ -64,6 +99,18 @@ public class SpaceshipController : MonoBehaviour
                 transform.position = new Vector3(clampedX, clampedY, transform.position.z);
 
             }
+            if (currentWeapon != defaultWeapon) 
+            {   
+                weaponTime -= Time.deltaTime;
+                if (weaponTime < 0)
+                {
+                    if(currentWeapon != null)
+                        Destroy(currentWeapon.gameObject);
+
+                    currentWeapon = defaultWeapon;
+                    currentWeapon.gameObject.SetActive(true);
+                }
+            }
             currentWeapon.FireActiveWeapon();
         }
     }
@@ -81,4 +128,36 @@ public class SpaceshipController : MonoBehaviour
         return Vector2.zero;
     }
 
+    public void PowerUp(PowerUpType powerUpType,float powerUpTime)
+    {
+        //Debug.Log("powerUp");
+        switch (powerUpType)
+        {
+            case PowerUpType.LaserWeapon:
+                SetWeapon(WeaponType.LaserWeapon,powerUpTime);
+                break;
+            case PowerUpType.MissileWeapon:
+                SetWeapon(WeaponType.MissileWeapon,powerUpTime);
+                break;
+            case PowerUpType.PlasmaWeapon:
+                SetWeapon(WeaponType.PlasmaWeapon, powerUpTime);
+                break;
+            case PowerUpType.FrontShield: 
+                break;
+            case PowerUpType.FrontSideShield:
+                break;
+
+
+        }
+    }
+    private void SetWeapon(WeaponType type,float powerUpTime)
+    {
+        weaponTime = powerUpTime;
+        var newWeapon = Instantiate(weaponsDictionary[type].WeaponPrefab, spaceshipWeaponParent);
+        if (currentWeapon != defaultWeapon)
+            Destroy(currentWeapon.gameObject);
+        else
+            currentWeapon.gameObject.SetActive(false);
+        currentWeapon = newWeapon.GetComponent<SpaceshipWeapon>();
+    }
 }

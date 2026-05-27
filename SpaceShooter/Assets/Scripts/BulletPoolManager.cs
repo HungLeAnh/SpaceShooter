@@ -4,9 +4,9 @@ using UnityEngine.Pool;
 public enum BulletType
 {
     Standard,
-    HeavyLaser,
-    SpreadPlasma,
-    HomingMissile
+    Laser,
+    Plasma,
+    Missile
 }
 public class MultiBulletPoolManager : MonoBehaviour
 {
