@@ -7,6 +7,7 @@ public class PooledBullet : MonoBehaviour
     [SerializeField] private BulletType bulletType;
     [SerializeField] private float speed = 12f;
     [SerializeField] private float maxLifetime = 3f;
+    [SerializeField] private float damage = 1f;
     [SerializeField] private GameObject explosionEffect;
 
     private MultiBulletPoolManager _poolManager;
@@ -45,6 +46,7 @@ public class PooledBullet : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent<IDamageable>(out var damageable))
         {
+            damageable.Damage(damage);
             StartCoroutine(PlayExplosionAnimation());
         }
 

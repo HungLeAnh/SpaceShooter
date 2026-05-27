@@ -6,7 +6,9 @@ public enum BulletType
     Standard,
     Laser,
     Plasma,
-    Missile
+    Missile,
+    Bullet,
+    Torpedo
 }
 public class MultiBulletPoolManager : MonoBehaviour
 {

@@ -21,7 +21,7 @@ public struct WeaponConfig
 }
 public interface IDamageable
 {
-
+    void Damage(float damage);
 }
 public interface IPowerUpable
 {
@@ -159,5 +159,10 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
         else
             currentWeapon.gameObject.SetActive(false);
         currentWeapon = newWeapon.GetComponent<SpaceshipWeapon>();
+    }
+
+    public void Damage(float damage)
+    {
+        Debug.Log("On damage");
     }
 }
