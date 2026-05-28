@@ -27,6 +27,7 @@ public class SpaceshipWeapon : MonoBehaviour
             {
                 projectile.transform.position = point.position;
                 projectile.transform.rotation = point.rotation;
+                projectile.GetComponent<PooledBullet>().SetFireDirection(Vector3.up);
             }
         }
     }

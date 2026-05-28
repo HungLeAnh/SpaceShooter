@@ -46,7 +46,7 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
     private float objectWidth;
     private float objectHeight;
     private bool isMoving = false;
-
+    private float currentHealth;
     private float shieldTime;
     private float weaponTime;
 
@@ -60,6 +60,7 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
     }
     private void Start()
     {
+        currentHealth = GameManager.Instance.SpaceShip.Maxhealth;
         weaponsDictionary = new Dictionary<WeaponType, WeaponConfig>();
         foreach (var weapon in weaponList)
         {
@@ -130,7 +131,8 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
 
     public void PowerUp(PowerUpType powerUpType,float powerUpTime)
     {
-        //Debug.Log("powerUp");
+        GameManager.Instance.SpaceShip.SetPowerUp(powerUpType);
+
         switch (powerUpType)
         {
             case PowerUpType.LaserWeapon:
@@ -142,12 +144,6 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
             case PowerUpType.PlasmaWeapon:
                 SetWeapon(WeaponType.PlasmaWeapon, powerUpTime);
                 break;
-            case PowerUpType.FrontShield: 
-                break;
-            case PowerUpType.FrontSideShield:
-                break;
-
-
         }
     }
     private void SetWeapon(WeaponType type,float powerUpTime)
@@ -158,11 +154,13 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
             Destroy(currentWeapon.gameObject);
         else
             currentWeapon.gameObject.SetActive(false);
-        currentWeapon = newWeapon.GetComponent<SpaceshipWeapon>();
+        currentWeapon = newWeapon.GetComponent<SpaceshipWeapon>();        
+        //Debug.Log("powerUp");
     }
 
     public void Damage(float damage)
     {
-        Debug.Log("On damage");
+        currentHealth -= damage;
+        GameManager.Instance.SpaceShip.SetHealth(currentHealth);
     }
 }

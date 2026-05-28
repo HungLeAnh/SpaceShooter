@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -16,10 +17,20 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Configuration Database")]
     [SerializeField] private List<EnemySpawnConfig> enemyConfig;
-    [SerializeField] private Transform[] spawnPoints;
+
+    [Header("Wave Sequence")]
+    [SerializeField] private List<EnemyWaveSO> waveTimeline;
+    [SerializeField] private bool loopSequence = true;
+    [Header("Spawn Line Geometry")]
+    [Tooltip("The vertical height coordinate off-screen where enemies materialize.")]
+    [SerializeField] private float spawnYCoordinate = 6f;
+    [Tooltip("Padding from the extreme left/right viewport edges to keep entities safely on screen.")]
+    [SerializeField] private float sideEdgePadding = 0.75f;
 
     private Dictionary<EnemyType, EnemySpawnConfig> enemyConfigDictionary; 
     private Dictionary<EnemyType, IObjectPool<GameObject>> enemyPool;
+    private int _currentWaveIndex = 0;
+    private bool _isSpawningActive = false;
 
     private void Awake()
     {
@@ -28,10 +39,6 @@ public class EnemyManager : MonoBehaviour
         else
             Destroy(this);
 
-
-    }
-    private void Start()
-    {
         enemyConfigDictionary = new Dictionary<EnemyType, EnemySpawnConfig>();
 
         enemyPool = new Dictionary<EnemyType, IObjectPool<GameObject>>();
@@ -65,7 +72,7 @@ public class EnemyManager : MonoBehaviour
 
         if (instance.TryGetComponent<EnemyController>(out var enemy))
         {
-            enemy.Initialize(this);
+
         }
         else
         {
@@ -97,21 +104,12 @@ public class EnemyManager : MonoBehaviour
             Destroy(enemy.gameObject);
         }
     }
-    // Quick testing method wrapper
-    [ContextMenu("Test Spawn Fighter")]
-    private void TestSpawn()
-    {
-        if (spawnPoints.Length > 0)
-        {
-            SpawnEnemy(EnemyType.Fighter, spawnPoints[0].position);
-        }
-    }
-    public void SpawnEnemy(EnemyType type, Vector2 position)
+    public GameObject SpawnEnemy(EnemyType type)
     {
         if (!enemyConfigDictionary.TryGetValue(type, out var config))
         {
             Debug.LogError($"[{name}] No configuration found for EnemyType: {type}");
-            return;
+            return null;
         }
 
         GameObject enemyObj = GetEnemy(type);
@@ -119,7 +117,64 @@ public class EnemyManager : MonoBehaviour
         if (enemyObj.TryGetComponent<EnemyController>(out var controller))
         {
             // Inject the corresponding structural data into the runtime controller layout
-            controller.Initialize(this);
+            return enemyObj;
+        }
+        return null;
+    }
+    public void StartSpawningSequence()
+    {
+        if (_isSpawningActive) return;
+        StartCoroutine(ExecuteWaveSequenceRoutine());
+    }
+
+    private IEnumerator ExecuteWaveSequenceRoutine()
+    {
+        _isSpawningActive = true;
+
+        while (_currentWaveIndex < waveTimeline.Count)
+        {
+            EnemyWaveSO currentWave = waveTimeline[_currentWaveIndex];
+            //Debug.Log($"<color=cyan>[Spawner]</color> Commencing Wave: {currentWave.waveName}");
+
+            // Execute pattern spawn events in parallel using individual tracked timers
+            yield return StartCoroutine(SpawnPatternRoutine(currentWave));
+
+            // Wait for padding buffer time before starting the next wave configuration block
+            yield return new WaitForSeconds(currentWave.timeAfterWaveClears);
+
+            _currentWaveIndex++;
+
+            if (loopSequence && _currentWaveIndex >= waveTimeline.Count)
+            {
+                _currentWaveIndex = 0; // Wrap around for endless testing validation loops
+            }
+        }
+
+        _isSpawningActive = false;
+    }
+
+    private IEnumerator SpawnPatternRoutine(EnemyWaveSO wave)
+    {
+        float spawnTime = 0;
+        int spawnedCount = 0;
+        int totalEvents = wave.spawnEvents.Count;
+
+        while (spawnedCount < totalEvents)
+        {
+            spawnTime -= Time.deltaTime;
+            if (spawnTime <= 0)
+            {
+                var enemy = SpawnEnemy(wave.spawnEvents[spawnedCount].enemyType);
+                enemy.GetComponent<Transform>().position = new Vector3(0, spawnYCoordinate, 0);
+                enemy.GetComponent<EnemyController>().Initialize(wave.spawnEvents[spawnedCount].pathData);
+                //Debug.Log("Spawn enemy");
+                if (spawnTime < totalEvents)
+                    spawnTime = wave.spawnEvents[spawnedCount].spawnDelay;
+                spawnedCount++;
+
+            }
+
+            yield return null;
         }
     }
 }

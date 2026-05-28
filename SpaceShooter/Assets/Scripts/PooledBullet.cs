@@ -8,24 +8,28 @@ public class PooledBullet : MonoBehaviour
     [SerializeField] private float speed = 12f;
     [SerializeField] private float maxLifetime = 3f;
     [SerializeField] private float damage = 1f;
+    [SerializeField] private GameObject bullet;
     [SerializeField] private GameObject explosionEffect;
 
     private MultiBulletPoolManager _poolManager;
     private float _lifetimeTimer;
-    private Transform _transform;
-
+    private Vector3 dir;
+    private bool isMoving = true;
     public BulletType Type => bulletType;
 
     private void Awake()
     {
-        _transform = transform;
     }
 
     public void Initialize(MultiBulletPoolManager manager)
     {
         _poolManager = manager;
     }
-
+    public void SetFireDirection(Vector3 fireDir)
+    {
+        dir = fireDir;
+        isMoving = true;
+    }
     private void OnEnable()
     {
         _lifetimeTimer = 0f;
@@ -33,7 +37,8 @@ public class PooledBullet : MonoBehaviour
 
     private void Update()
     {
-        _transform.Translate(Vector3.up * (speed * Time.deltaTime));
+        if(isMoving)
+            transform.position += dir * (speed * Time.deltaTime);
 
         _lifetimeTimer += Time.deltaTime;
         if (_lifetimeTimer >= maxLifetime)
@@ -54,8 +59,10 @@ public class PooledBullet : MonoBehaviour
 
     IEnumerator PlayExplosionAnimation()
     {
+        isMoving = false;
+        bullet.SetActive(false);
         explosionEffect.SetActive(true);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.5f);
         ReturnToPool();
     }
 

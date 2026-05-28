@@ -13,6 +13,7 @@ public class PowerUpManager : MonoBehaviour
     {
         public PowerUpType type;
         public GameObject prefab;
+        public Sprite Icon;
         public int defaultCapacity;
         public int maxPoolSize;
     }
@@ -21,6 +22,7 @@ public class PowerUpManager : MonoBehaviour
 
     private Dictionary<PowerUpType, IObjectPool<GameObject>> powerUpPool;
     private Dictionary<PowerUpType, PowerUpConfig> powerUpConfigDictionary;
+    public Dictionary<PowerUpType, PowerUpConfig> PowerUpConfigDictionary => powerUpConfigDictionary;
     private void Awake()
     {
         if (Instance == null)

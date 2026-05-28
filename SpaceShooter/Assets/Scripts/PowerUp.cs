@@ -3,10 +3,6 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 public enum PowerUpType
 {
-    FrontShield,
-    FrontSideShield,
-    AllAroundShield,
-    InvincesShield,
     LaserWeapon,
     MissileWeapon,
     PlasmaWeapon,

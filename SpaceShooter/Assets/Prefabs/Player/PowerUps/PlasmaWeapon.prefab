@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5987ee11b7b384584ce79a564f1cbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUpType: 6
+  powerUpType: 2
   powerUpTime: 10
   powerUpSpeed: 1
 --- !u!61 &1060285659321074877

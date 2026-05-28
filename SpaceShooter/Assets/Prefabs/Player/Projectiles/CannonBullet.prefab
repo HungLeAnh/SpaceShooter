@@ -50,6 +50,8 @@ MonoBehaviour:
   bulletType: 0
   speed: 12
   maxLifetime: 3
+  damage: 2
+  bullet: {fileID: 7705912507969920787}
   explosionEffect: {fileID: 6357557007622789736}
 --- !u!61 &8663341135668252086
 BoxCollider2D:
@@ -158,6 +160,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7878350319992209165, guid: bb454a0ffd3dab2439c96b7d6e994abf, type: 3}
   m_PrefabInstance: {fileID: 741011228657617019}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7705912507969920787 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2253911629886400664, guid: bb454a0ffd3dab2439c96b7d6e994abf, type: 3}
+  m_PrefabInstance: {fileID: 741011228657617019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4072075649045040384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -173,6 +180,14 @@ PrefabInstance:
     - target: {fileID: -2253911629886400664, guid: b6e08dcc0b377074f9a6cd7ebeddf653, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b6e08dcc0b377074f9a6cd7ebeddf653, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b6e08dcc0b377074f9a6cd7ebeddf653, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1647937237
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: b6e08dcc0b377074f9a6cd7ebeddf653, type: 3}
       propertyPath: m_LocalPosition.x

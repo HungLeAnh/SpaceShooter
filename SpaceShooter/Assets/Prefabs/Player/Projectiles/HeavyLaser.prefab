@@ -50,6 +50,8 @@ MonoBehaviour:
   bulletType: 1
   speed: 12
   maxLifetime: 3
+  damage: 10
+  bullet: {fileID: 1534394506124534342}
   explosionEffect: {fileID: 548585033438895225}
 --- !u!58 &4548539602480920484
 CircleCollider2D:
@@ -101,6 +103,14 @@ PrefabInstance:
     - target: {fileID: -2253911629886400664, guid: 670ea3e583f12524f9b4bdea965a5c3c, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 670ea3e583f12524f9b4bdea965a5c3c, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 670ea3e583f12524f9b4bdea965a5c3c, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1647937237
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 670ea3e583f12524f9b4bdea965a5c3c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -214,6 +224,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -8435245712485981826, guid: 90cd0304a0ff68748a4e94bc519a7cab, type: 3}
+--- !u!1 &1534394506124534342 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2253911629886400664, guid: 90cd0304a0ff68748a4e94bc519a7cab, type: 3}
+  m_PrefabInstance: {fileID: 8499203974868694318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1776310666988784163 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7878350319992209165, guid: 90cd0304a0ff68748a4e94bc519a7cab, type: 3}

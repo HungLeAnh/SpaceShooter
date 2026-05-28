@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private float speed = 5f;
-    [SerializeField] private int health = 3;
+    [SerializeField] private int health = 100;
 
     private GameStateManager gameStateManager;
     private GameStateType currentStateType;
@@ -119,6 +119,7 @@ public class PlayingState : GameState
     public override void Enter()
     {
         HUDController.Instance.ShowElement(HUDStateType.Stats);
+        EnemyManager.Instance.StartSpawningSequence();
     }
     public override void Exit()
     {
