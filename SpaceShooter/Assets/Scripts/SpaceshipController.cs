@@ -29,13 +29,13 @@ public interface IPowerUpable
 }
 public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
 {
-    [SerializeField] private Camera mainCamera;
     [SerializeField] private SpriteRenderer spaceshipRenderer;
     [SerializeField] private SpriteRenderer engineRenderer;
     [SerializeField] private SpriteRenderer engineEffect;
     [SerializeField] private Transform spaceshipWeaponParent;
     [SerializeField] private List<WeaponConfig> weaponList;
     [SerializeField] private SpaceshipWeapon defaultWeapon;
+    [SerializeField] private GameObject ExplodedEffect;
 
     private Dictionary<WeaponType, WeaponConfig> weaponsDictionary;
 
@@ -67,7 +67,7 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
             weaponsDictionary[weapon.WeaponType] = weapon;
         }
 
-        screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         objectWidth = spaceshipRenderer.bounds.size.x / 2;
         objectHeight = spaceshipRenderer.bounds.size.y / 2;
 
@@ -110,6 +110,7 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
 
                     currentWeapon = defaultWeapon;
                     currentWeapon.gameObject.SetActive(true);
+                    GameManager.Instance.SpaceShip.SetPowerUp(null);
                 }
             }
             currentWeapon.FireActiveWeapon();
@@ -161,6 +162,13 @@ public class SpaceshipController : MonoBehaviour,IDamageable,IPowerUpable
     public void Damage(float damage)
     {
         currentHealth -= damage;
+        if(currentHealth <= 0)
+        {
+            ExplodedEffect.SetActive(true);
+            spaceshipRenderer.gameObject.SetActive(false);
+            engineRenderer.gameObject.SetActive(false);
+            engineEffect.gameObject.SetActive(false);
+        }
         GameManager.Instance.SpaceShip.SetHealth(currentHealth);
     }
 }

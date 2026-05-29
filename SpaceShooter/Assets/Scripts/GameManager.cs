@@ -8,7 +8,8 @@ public enum GameStateType
 {
     MainMenu,
     Playing,
-    GameOver
+    GameOver,
+    VicTory,
 }
 
 public class GameManager : MonoBehaviour
@@ -16,12 +17,15 @@ public class GameManager : MonoBehaviour
     public Action OnStateChanged;
     public static GameManager Instance;
 
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private float speed = 5f;
     [SerializeField] private int health = 100;
+    [SerializeField] private Vector3 spawnPos = Vector3.zero;
 
     private GameStateManager gameStateManager;
     private GameStateType currentStateType;
     private SpaceShip spaceShip;
+    private GameObject playerGameObject;
 
 
     public GameStateType CurrentStateType { get => currentStateType; set => currentStateType = value; }
@@ -34,7 +38,15 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
         spaceShip = new SpaceShip(health, speed);
+        spaceShip.OnHealthChanged += OnHealthChanged;
+    }
 
+    private void OnHealthChanged()
+    {
+        if (spaceShip.Health < 0)
+        {
+            ChangeState(GameStateType.GameOver);
+        }
     }
 
     private void Start()
@@ -62,12 +74,26 @@ public class GameManager : MonoBehaviour
                 gameStateManager.ChangeState(new GameOverState());
                 currentStateType = GameStateType.GameOver;
                 break;
+            case GameStateType.VicTory:
+                gameStateManager.ChangeState(new GameVictoryState());
+                currentStateType = GameStateType.VicTory;
+                break;
         }
         OnStateChanged?.Invoke();
     }
     public void OnPlayTap()
     {
         ChangeState(GameStateType.Playing);
+    }
+    public void InstantiatePlayer()
+    {
+        playerGameObject = Instantiate(playerPrefab);
+        playerGameObject.transform.position = spawnPos;
+    }
+
+    public void DestroyPlayer()
+    {
+        Destroy(playerGameObject);
     }
 }
 public class GameStateManager
@@ -120,10 +146,10 @@ public class PlayingState : GameState
     {
         HUDController.Instance.ShowElement(HUDStateType.Stats);
         EnemyManager.Instance.StartSpawningSequence();
+        GameManager.Instance.InstantiatePlayer();
     }
     public override void Exit()
     {
-        HUDController.Instance.HideElement(HUDStateType.Stats);
     }
     public override void Update()
     {
@@ -135,10 +161,29 @@ public class GameOverState : GameState
     public override void Enter()
     {
         HUDController.Instance.ShowElement(HUDStateType.GameOver);
+        GameManager.Instance.DestroyPlayer();
     }
     public override void Exit()
     {
         HUDController.Instance.HideElement(HUDStateType.GameOver);
+    }
+    public override void Update()
+    {
+        
+    }
+}
+public class GameVictoryState : GameState
+{
+    public override void Enter()
+    {
+        HUDController.Instance.ShowElement(HUDStateType.Victory);
+        EnemyManager.Instance.DestroyAllEnenmy();
+    }
+    public override void Exit()
+    {
+        HUDController.Instance.HideElement(HUDStateType.Victory);
+        GameManager.Instance.DestroyPlayer();
+
     }
     public override void Update()
     {

@@ -29,4 +29,19 @@ MonoBehaviour:
   - enemyType: 3
     spawnDelay: 3
     pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
-  timeAfterWaveClears: 0
+  - enemyType: 3
+    spawnDelay: 3
+    pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
+  - enemyType: 3
+    spawnDelay: 3
+    pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
+  - enemyType: 3
+    spawnDelay: 3
+    pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
+  - enemyType: 3
+    spawnDelay: 3
+    pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
+  - enemyType: 3
+    spawnDelay: 3
+    pathData: {fileID: 11400000, guid: 6abb94c8d47ad6b47b76097ffd6cddb2, type: 2}
+  timeAfterWaveClears: 10

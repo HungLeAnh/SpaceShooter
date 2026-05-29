@@ -33,9 +33,17 @@ public class UIStatsController : MonoBehaviour
 
     private void OnPowerUpChanged()
     {
-        if(PowerUpManager.Instance.PowerUpConfigDictionary.TryGetValue(GameManager.Instance.SpaceShip.PowerUp,out var powerUpConfig))
+        if(GameManager.Instance.SpaceShip.PowerUp == null)
+        {
+            powerUpImage.sprite = null;
+            powerUpImage.gameObject.SetActive(false);
+            return;
+        }
+
+        if (PowerUpManager.Instance.PowerUpConfigDictionary.TryGetValue(GameManager.Instance.SpaceShip.PowerUp.Value, out var powerUpConfig))
         {
             powerUpImage.sprite = powerUpConfig.Icon;
+            powerUpImage.gameObject.SetActive(true);
         }
     }
 

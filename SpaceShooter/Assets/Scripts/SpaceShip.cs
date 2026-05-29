@@ -10,10 +10,10 @@ public class SpaceShip
     private float health;
     private float speed;
     private float fireRate;
-    private PowerUpType powerUp;
+    private PowerUpType? powerUp;
     private int score;
     public float Health => health;
-    public PowerUpType PowerUp => powerUp;
+    public PowerUpType? PowerUp => powerUp;
     public int Score => score;
     public float Speed { get => speed; set => speed = value; }
     public float FireRate { get => fireRate; set => fireRate = value; }
@@ -34,7 +34,7 @@ public class SpaceShip
         OnHealthChanged?.Invoke();
     }
 
-    public void SetPowerUp(PowerUpType powerUpType)
+    public void SetPowerUp(PowerUpType? powerUpType)
     {
         powerUp = powerUpType;
         OnPowerUpChanged?.Invoke();

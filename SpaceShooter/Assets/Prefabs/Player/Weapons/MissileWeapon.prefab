@@ -51,7 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674cc2b2917ed244da4ce0d0daa0c63a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolManager: {fileID: 0}
   muzzlePoint:
   - {fileID: 5509330489877820793}
   - {fileID: 7281747993969498746}
@@ -60,7 +59,8 @@ MonoBehaviour:
   - {fileID: 178808473062355431}
   - {fileID: 6850479333948708512}
   currentActiveAmmo: 3
-  fireRate: 0.8
+  fireRate: 0.5
+  weaponAnimator: {fileID: 0}
 --- !u!1 &2464837668330958702
 GameObject:
   m_ObjectHideFlags: 0

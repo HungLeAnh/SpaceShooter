@@ -24,11 +24,14 @@ public class PooledBullet : MonoBehaviour
     public void Initialize(MultiBulletPoolManager manager)
     {
         _poolManager = manager;
+
     }
     public void SetFireDirection(Vector3 fireDir)
     {
         dir = fireDir;
         isMoving = true;
+        bullet.SetActive(true);
+        explosionEffect.SetActive(false);
     }
     private void OnEnable()
     {
@@ -62,7 +65,7 @@ public class PooledBullet : MonoBehaviour
         isMoving = false;
         bullet.SetActive(false);
         explosionEffect.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
         ReturnToPool();
     }
 

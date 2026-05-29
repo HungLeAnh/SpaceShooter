@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "SpaceShooter/Enemy Data", order = 1)]
@@ -14,5 +15,5 @@ public class EnemyDataSO : ScriptableObject
 
     [Header("Combat Settings")]
     public float fireRate = 2f;
-    public BulletType bulletType;
+    public List<BulletType> bulletType;
 }

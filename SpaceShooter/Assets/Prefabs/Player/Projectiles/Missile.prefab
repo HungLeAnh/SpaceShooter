@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletType: 3
-  speed: 12
+  speed: 10
   maxLifetime: 3
   damage: 4
   bullet: {fileID: 2776827615910918258}

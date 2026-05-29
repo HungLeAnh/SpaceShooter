@@ -51,7 +51,7 @@ MonoBehaviour:
   - {fileID: 4218726966328003138}
   - {fileID: 9168591969490824094}
   currentActiveAmmo: 0
-  fireRate: 0.7
+  fireRate: 0.2
   weaponAnimator: {fileID: 8322404292527470893}
 --- !u!1 &2635271525258936534
 GameObject:

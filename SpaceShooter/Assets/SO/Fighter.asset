@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514ac23689f263f459959ad5de063d31, type: 3}
   m_Name: Fighter
   m_EditorClassIdentifier: 
-  enemyType: 7
+  enemyType: 3
   enemyName: Fighter
-  maxHealth: 10
+  maxHealth: 30
   moveSpeed: 3
   scoreReward: 50
-  fireRate: 1.5
-  bulletType: 5
+  fireRate: 2.5
+  bulletType: 04000000

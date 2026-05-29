@@ -9,7 +9,9 @@ public enum HUDStateType
 {
     Stats,
     Menu,
-    GameOver
+    GameOver,
+    Wave,
+    Victory
 }
 
 [Serializable]
@@ -25,12 +27,19 @@ public class HUDController : MonoBehaviour
 
     [SerializeField] private List<HUDElement> HUDElements;
 
+    private Dictionary<HUDStateType, GameObject> HUDelementDictionary;
     private void Awake()
     {
         if(Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
+
+        HUDelementDictionary = new Dictionary<HUDStateType, GameObject>();
+        foreach (var element in HUDElements)
+        {
+            HUDelementDictionary[element.StateType] = element.Element;
+        }
     }
     private void Start()
     {
@@ -38,22 +47,16 @@ public class HUDController : MonoBehaviour
 
     public void ShowElement(HUDStateType stateType)
     {
-        foreach (var element in HUDElements)
+        if (HUDelementDictionary.TryGetValue(stateType, out GameObject element))
         {
-            if (element.StateType == stateType)
-            {
-                element.Element.SetActive(true);
-            }
+            element.SetActive(true);
         }
     }
     public void HideElement(HUDStateType stateType)
     {
-        foreach (var element in HUDElements)
+        if(HUDelementDictionary.TryGetValue(stateType, out GameObject element))
         {
-            if (element.StateType == stateType)
-            {
-                element.Element.SetActive(false);
-            }
+            element.SetActive(false);
         }
     }
 

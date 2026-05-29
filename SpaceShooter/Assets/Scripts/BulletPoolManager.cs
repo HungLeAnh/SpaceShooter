@@ -8,7 +8,8 @@ public enum BulletType
     Plasma,
     Missile,
     Bullet,
-    Torpedo
+    Torpedo,
+    Wave
 }
 public class MultiBulletPoolManager : MonoBehaviour
 {

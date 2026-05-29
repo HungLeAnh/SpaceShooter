@@ -32,14 +32,14 @@ public class EnemyController : MonoBehaviour,IDamageable
 
     protected float currentHealth;
     protected EnemyManager enemyManager;
-    private float nextFireTime;
-    private bool isDestroyed;
+    protected float nextFireTime;
+    protected bool isDestroyed;
 
-    private EnemyPathSO pathData;
-    private Vector2[] _worldWaypoints;
-    private int _currentWaypointIndex = 0;
-    private bool _hasPath = false;
-    private Rigidbody2D _rb;
+    protected EnemyPathSO pathData;
+    protected Vector2[] _worldWaypoints;
+    protected int _currentWaypointIndex = 0;
+    protected bool _hasPath = false;
+    protected Rigidbody2D _rb;
     public EnemyType Type => enemyData != null ? enemyData.enemyType : EnemyType.Scout;
 
     protected virtual void Awake()
@@ -58,11 +58,9 @@ public class EnemyController : MonoBehaviour,IDamageable
 
         // Convert local pattern offsets into absolute world positions based on current spawn location
         _worldWaypoints = new Vector2[pathData.localWaypoints.Length];
-        Vector2 spawnPosition = _rb.position;
-
         for (int i = 0; i < pathData.localWaypoints.Length; i++)
         {
-            _worldWaypoints[i] = spawnPosition + pathData.localWaypoints[i];
+            _worldWaypoints[i] = pathData.localWaypoints[i];
         }
 
         _currentWaypointIndex = 0;
@@ -73,7 +71,7 @@ public class EnemyController : MonoBehaviour,IDamageable
          Fire();
     }
 
-    private void Fire()
+    protected virtual void Fire()
     {
         if (Time.time < nextFireTime || isDestroyed)
             return;
@@ -82,7 +80,7 @@ public class EnemyController : MonoBehaviour,IDamageable
         PlayAnimation(AnimationType.Fire);
         foreach (var point in muzzlePoint)
         {
-            GameObject projectile = MultiBulletPoolManager.Instance.GetBullet(enemyData.bulletType);
+            GameObject projectile = MultiBulletPoolManager.Instance.GetBullet(enemyData.bulletType[0]);
             if (projectile != null)
             {
                 projectile.transform.position = point.position;
@@ -101,13 +99,6 @@ public class EnemyController : MonoBehaviour,IDamageable
     }
     protected virtual void Move()
     {
-        //Debug.Log("moving");
-        if (_currentWaypointIndex >= _worldWaypoints.Length)
-        {
-            // Path finished: Continue flying downwards off-screen
-            _rb.velocity = Vector2.down * enemyData.moveSpeed;
-            return;
-        }
 
         Vector2 targetPosition = _worldWaypoints[_currentWaypointIndex];
         Vector2 currentPosition = _rb.position;
@@ -139,7 +130,7 @@ public class EnemyController : MonoBehaviour,IDamageable
             GameManager.Instance.SpaceShip.UpdateScore(enemyData.scoreReward);
         }
     }
-    IEnumerator PlayDieAniamtion()
+    public IEnumerator PlayDieAniamtion()
     {
         isDestroyed = true;
         PlayAnimation(AnimationType.Die);

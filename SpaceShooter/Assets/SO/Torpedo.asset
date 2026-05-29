@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 7
   enemyName: Torpedo
-  maxHealth: 15
+  maxHealth: 60
   moveSpeed: 2
   scoreReward: 100
-  fireRate: 2
-  bulletType: 5
+  fireRate: 3
+  bulletType: 05000000

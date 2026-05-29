@@ -81,7 +81,6 @@ public class PowerUpManager : MonoBehaviour
             return pool.Get();
         }
 
-        Debug.LogError($"[{name}] No active object pool configuration layer exists for PowerUpType: {type}!", this);
         return null;
     }
 

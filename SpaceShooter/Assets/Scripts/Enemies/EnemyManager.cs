@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -29,8 +30,11 @@ public class EnemyManager : MonoBehaviour
 
     private Dictionary<EnemyType, EnemySpawnConfig> enemyConfigDictionary; 
     private Dictionary<EnemyType, IObjectPool<GameObject>> enemyPool;
+    private List<GameObject> activeEnemy;
     private int _currentWaveIndex = 0;
     private bool _isSpawningActive = false;
+
+    public int CurrentWaveIndex { get => _currentWaveIndex; set => _currentWaveIndex = value; }
 
     private void Awake()
     {
@@ -38,7 +42,7 @@ public class EnemyManager : MonoBehaviour
             Instance = this;
         else
             Destroy(this);
-
+        activeEnemy = new List<GameObject>();
         enemyConfigDictionary = new Dictionary<EnemyType, EnemySpawnConfig>();
 
         enemyPool = new Dictionary<EnemyType, IObjectPool<GameObject>>();
@@ -86,7 +90,9 @@ public class EnemyManager : MonoBehaviour
     {
         if (enemyPool.TryGetValue(type, out var pool))
         {
-            return pool.Get();
+            var instance = pool.Get();
+            activeEnemy.Add(instance);
+            return instance;
         }
 
         Debug.LogError($"[{name}] No active object pool configuration layer exists for Enemy: {type}!", this);
@@ -97,6 +103,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (enemyPool.TryGetValue(enemy.Type, out var pool))
         {
+            activeEnemy.Remove(enemy.gameObject);
             pool.Release(enemy.gameObject);
         }
         else
@@ -134,8 +141,8 @@ public class EnemyManager : MonoBehaviour
         while (_currentWaveIndex < waveTimeline.Count)
         {
             EnemyWaveSO currentWave = waveTimeline[_currentWaveIndex];
-            //Debug.Log($"<color=cyan>[Spawner]</color> Commencing Wave: {currentWave.waveName}");
 
+            HUDController.Instance.ShowElement(HUDStateType.Wave);
             // Execute pattern spawn events in parallel using individual tracked timers
             yield return StartCoroutine(SpawnPatternRoutine(currentWave));
 
@@ -143,7 +150,6 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(currentWave.timeAfterWaveClears);
 
             _currentWaveIndex++;
-
             if (loopSequence && _currentWaveIndex >= waveTimeline.Count)
             {
                 _currentWaveIndex = 0; // Wrap around for endless testing validation loops
@@ -167,7 +173,6 @@ public class EnemyManager : MonoBehaviour
                 var enemy = SpawnEnemy(wave.spawnEvents[spawnedCount].enemyType);
                 enemy.GetComponent<Transform>().position = new Vector3(0, spawnYCoordinate, 0);
                 enemy.GetComponent<EnemyController>().Initialize(wave.spawnEvents[spawnedCount].pathData);
-                //Debug.Log("Spawn enemy");
                 if (spawnTime < totalEvents)
                     spawnTime = wave.spawnEvents[spawnedCount].spawnDelay;
                 spawnedCount++;
@@ -175,6 +180,14 @@ public class EnemyManager : MonoBehaviour
             }
 
             yield return null;
+        }
+    }
+
+    public void DestroyAllEnenmy()
+    {
+        foreach(var enemyGameObject in activeEnemy.ToList())
+        {
+            StartCoroutine(enemyGameObject.GetComponent<EnemyController>().PlayDieAniamtion());
         }
     }
 }

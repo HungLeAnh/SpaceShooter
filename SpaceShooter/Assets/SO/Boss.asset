@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ff169107a7a5d2458064b4f5779fb78, type: 3}
-  m_Name: Standard
+  m_Script: {fileID: 11500000, guid: 514ac23689f263f459959ad5de063d31, type: 3}
+  m_Name: Boss
   m_EditorClassIdentifier: 
-  localWaypoints:
-  - {x: -3, y: 3}
-  - {x: 3, y: 3}
-  - {x: -3, y: 1.5}
-  - {x: -3, y: 3}
-  loopPath: 1
+  enemyType: 2
+  enemyName: Dreadnought
+  maxHealth: 200
+  moveSpeed: 2
+  scoreReward: 500
+  fireRate: 1
+  bulletType: 06000000
