@@ -81,7 +81,9 @@ public class PowerUpManager : MonoBehaviour
     {
         if (powerUpPool.TryGetValue(type, out var pool))
         {
-            return pool.Get();
+            var instance = pool.Get();
+            activePowerUps.Add(instance);
+            return instance;
         }
 
         return null;
@@ -91,6 +93,7 @@ public class PowerUpManager : MonoBehaviour
     {
         if (powerUpPool.TryGetValue(powerUp.PowerUpType, out var pool))
         {
+            activePowerUps.Remove(powerUp.gameObject);
             pool.Release(powerUp.gameObject);
         }
         else
