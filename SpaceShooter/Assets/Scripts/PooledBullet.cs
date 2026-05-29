@@ -69,7 +69,7 @@ public class PooledBullet : MonoBehaviour
         ReturnToPool();
     }
 
-    private void ReturnToPool()
+    public void ReturnToPool()
     {
         if (_poolManager != null && gameObject.activeSelf)
         {

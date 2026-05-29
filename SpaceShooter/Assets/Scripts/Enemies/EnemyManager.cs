@@ -130,7 +130,7 @@ public class EnemyManager : MonoBehaviour
     }
     public void StartSpawningSequence()
     {
-        if (_isSpawningActive) return;
+        _currentWaveIndex = 0;
         StartCoroutine(ExecuteWaveSequenceRoutine());
     }
 
@@ -185,9 +185,10 @@ public class EnemyManager : MonoBehaviour
 
     public void DestroyAllEnenmy()
     {
+        StopAllCoroutines();
         foreach(var enemyGameObject in activeEnemy.ToList())
         {
-            StartCoroutine(enemyGameObject.GetComponent<EnemyController>().PlayDieAniamtion());
+            enemyGameObject.GetComponent<EnemyController>().ReturnToPool();
         }
     }
 }

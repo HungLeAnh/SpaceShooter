@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.EditorTools;
 using UnityEngine;
 public enum PowerUpType
 {
@@ -55,7 +54,7 @@ public class PowerUp : MonoBehaviour
             ReturnToPool();
         }
     }
-    private void ReturnToPool()
+    public void ReturnToPool()
     {
         if (powerUpManager != null && gameObject.activeSelf)
         {

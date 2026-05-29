@@ -10,17 +10,24 @@ public class UIStatsController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Slider healthBar;
     [SerializeField] private Image powerUpImage;
-    void Start()
+    private void Start()
     {
+        GameManager.Instance.OnPlayerSpawned += OnPlayerSpawned;
+        Debug.Log("sub to player spawned");
+    }
+
+    public void OnPlayerSpawned()
+    {
+        Debug.Log("player spawned");
         GameManager.Instance.SpaceShip.OnHealthChanged += OnHealthChanged;
         GameManager.Instance.SpaceShip.OnPowerUpChanged += OnPowerUpChanged;
         GameManager.Instance.SpaceShip.OnScoreChanged += OnScoreChanged;
 
-        if (healthBar != null) 
+        if (healthBar != null)
         {
             healthBar.value = 1;
         }
-        if (powerUpImage != null) 
+        if (powerUpImage != null)
         {
             powerUpImage.sprite = null;
             powerUpImage.gameObject.SetActive(false);
@@ -62,8 +69,4 @@ public class UIStatsController : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
 }

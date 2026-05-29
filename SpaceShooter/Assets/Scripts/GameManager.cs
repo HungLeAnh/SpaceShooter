@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public enum GameStateType
 {
@@ -11,10 +10,12 @@ public enum GameStateType
     GameOver,
     VicTory,
 }
-
+[DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
+    public Action OnPlayerSpawned;
     public Action OnStateChanged;
+    
     public static GameManager Instance;
 
     [SerializeField] private GameObject playerPrefab;
@@ -37,8 +38,6 @@ public class GameManager : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-        spaceShip = new SpaceShip(health, speed);
-        spaceShip.OnHealthChanged += OnHealthChanged;
     }
 
     private void OnHealthChanged()
@@ -87,8 +86,12 @@ public class GameManager : MonoBehaviour
     }
     public void InstantiatePlayer()
     {
+        spaceShip = new SpaceShip(health, speed);
+        spaceShip.OnHealthChanged += OnHealthChanged;
         playerGameObject = Instantiate(playerPrefab);
         playerGameObject.transform.position = spawnPos;
+        OnPlayerSpawned?.Invoke();
+        Debug.Log($"Invoke player spawn event {OnPlayerSpawned.GetInvocationList().Length}");
     }
 
     public void DestroyPlayer()
@@ -144,9 +147,10 @@ public class PlayingState : GameState
 {
     public override void Enter()
     {
-        HUDController.Instance.ShowElement(HUDStateType.Stats);
-        EnemyManager.Instance.StartSpawningSequence();
+        PowerUpManager.Instance.ReturnAllToPool();
         GameManager.Instance.InstantiatePlayer();
+        EnemyManager.Instance.StartSpawningSequence();
+        HUDController.Instance.ShowElement(HUDStateType.Stats);
     }
     public override void Exit()
     {
@@ -166,6 +170,8 @@ public class GameOverState : GameState
     public override void Exit()
     {
         HUDController.Instance.HideElement(HUDStateType.GameOver);
+        EnemyManager.Instance.DestroyAllEnenmy();
+        MultiBulletPoolManager.Instance.ReturnAllBulletToPool();
     }
     public override void Update()
     {

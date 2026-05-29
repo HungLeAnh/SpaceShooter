@@ -148,7 +148,7 @@ public class EnemyController : MonoBehaviour,IDamageable
     {
         ReturnToPool();
     }
-    private void ReturnToPool()
+    public void ReturnToPool()
     {
         if (enemyManager != null && gameObject.activeSelf)
         {

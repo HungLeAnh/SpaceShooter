@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 public enum BulletType
@@ -30,6 +31,7 @@ public class MultiBulletPoolManager : MonoBehaviour
     // Dictionary storage mapping the Enum to the respective Native Unity Object Pool interface
     private Dictionary<BulletType, IObjectPool<GameObject>> _pools;
     private Dictionary<BulletType, BulletPoolConfig> _configLookup;
+    private List<GameObject> activeBullets;
 
     private void Awake()
     {
@@ -42,7 +44,7 @@ public class MultiBulletPoolManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
+        activeBullets = new List<GameObject>();
         _pools = new Dictionary<BulletType, IObjectPool<GameObject>>();
         _configLookup = new Dictionary<BulletType, BulletPoolConfig>();
 
@@ -96,7 +98,9 @@ public class MultiBulletPoolManager : MonoBehaviour
     {
         if (_pools.TryGetValue(type, out var pool))
         {
-            return pool.Get();
+            var instance = pool.Get();
+            activeBullets.Add(instance);
+            return instance;
         }
 
         Debug.LogError($"[{name}] No active object pool configuration layer exists for BulletType: {type}!", this);
@@ -108,12 +112,20 @@ public class MultiBulletPoolManager : MonoBehaviour
     {
         if (_pools.TryGetValue(bullet.Type, out var pool))
         {
+            activeBullets.Remove(bullet.gameObject);
             pool.Release(bullet.gameObject);
         }
         else
         {
             // Fallback safety catch to prevent memory leaks if objects are manipulated unexpectedly
             Destroy(bullet.gameObject);
+        }
+    }
+    public void ReturnAllBulletToPool()
+    {
+        foreach(var bullet in activeBullets.ToList())
+        {
+            bullet.GetComponent<PooledBullet>().ReturnToPool();
         }
     }
 }

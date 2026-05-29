@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -22,6 +23,7 @@ public class PowerUpManager : MonoBehaviour
 
     private Dictionary<PowerUpType, IObjectPool<GameObject>> powerUpPool;
     private Dictionary<PowerUpType, PowerUpConfig> powerUpConfigDictionary;
+    private List<GameObject> activePowerUps;
     public Dictionary<PowerUpType, PowerUpConfig> PowerUpConfigDictionary => powerUpConfigDictionary;
     private void Awake()
     {
@@ -32,6 +34,7 @@ public class PowerUpManager : MonoBehaviour
     }
     private void Start()
     {
+        activePowerUps = new List<GameObject>();
         powerUpPool= new Dictionary<PowerUpType, IObjectPool<GameObject>>();
         powerUpConfigDictionary = new Dictionary<PowerUpType, PowerUpConfig>();
         InitializePools();
@@ -93,6 +96,13 @@ public class PowerUpManager : MonoBehaviour
         else
         {
             Destroy(powerUp.gameObject);
+        }
+    }
+    public void ReturnAllToPool()
+    {
+        foreach (var pool in activePowerUps.ToList())
+        {
+            pool.GetComponent<PowerUp>().ReturnToPool();
         }
     }
 }

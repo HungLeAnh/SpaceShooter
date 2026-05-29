@@ -1,7 +1,7 @@
 ## Space Shooter
 ### Description: Simple Space Shooter, having power up, wave of enemy, a final boss
 ### Open and run the project in Unity 2022.3.62f2. Switch flatform to Android.
-### Using WASD to control. Avoid enemies' bullets.
+### Using WASD or mouse to control. Avoid enemies' bullets.
 ### Known issues/incomplete features: 
 #### - No Multiple levels or a progression system. Just simple gameplay.
 #### - No clear boss state.
